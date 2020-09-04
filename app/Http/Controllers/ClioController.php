@@ -10,4 +10,9 @@ class ClioController extends Controller
     public function index () {
         return Socialite::driver('clio')->redirect();
     }
+
+    public function callback (Request $request) {
+        dd($request);
+    }
+
 }

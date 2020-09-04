@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::get('clio', 'ClioController@index')->name('clio');
+Route::any('clio_callback', 'ClioController@callback')->name('clio_callback');
