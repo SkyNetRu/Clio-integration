@@ -12,9 +12,10 @@ class ClioController extends Controller
         $tokens = ClioApiTokens::find(1);
         if ($tokens AND true ){
 //            Carbon::parse($tokens->expires_in) < Carbon::now()) {
-            return Socialite::driver('clio')
+            $test =  Socialite::driver('clio')
                 ->with(["grant_type" => "refresh_token", 'refresh_token' => $tokens->refresh_token])
                 ->redirect();
+            dd($test);
         }
         return Socialite::driver('clio')->redirect();
     }
