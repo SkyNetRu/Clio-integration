@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e9684ebc-6a6d-4ec5-b864-8b1c261016ce" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/clio.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/clio.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Formstack.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Formstack.php" afterDir="false" />
     </list>
@@ -177,7 +174,7 @@
       <workItem from="1599220604668" duration="2343000" />
       <workItem from="1599223469620" duration="5397000" />
       <workItem from="1599995283147" duration="1316000" />
-      <workItem from="1600008234167" duration="13496000" />
+      <workItem from="1600008234167" duration="13757000" />
     </task>
     <servers />
   </component>
