@@ -16,8 +16,8 @@ class Formstack extends Controller
             $url = env('CLIO_API_URL') . 'contacts.json';
             $getContacts = Http::withToken($tokens->access_token)->get($url);
             dump($getContacts->json());
-            $data = \GuzzleHttp\json_encode(
-                [
+            //$data = \GuzzleHttp\json_encode(
+                $data =    [
                     'data' => [
                         "first_name" => $input->name->value->first,
                         "middle_name" => $input->name->value->middle,
@@ -37,12 +37,12 @@ class Formstack extends Controller
                             ]
                         ],
                     ]
-                ]
-            );
+                ];
+            //);
             dump($data);
             $createContact = Http::withToken($tokens->access_token)
                 ->withHeaders(['Content-Type' => 'application/json'])
-                ->withOptions(['body' => $data])
+                ->withOptions(['json' => $data])
                 ->post($url);
             dump($createContact->json());
         }
