@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 use App\ClioApiTokens;
 use Carbon\Carbon;
