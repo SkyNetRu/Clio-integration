@@ -18,31 +18,30 @@ class Formstack extends Controller
             dump($getContacts->json());
             $data = \GuzzleHttp\json_encode(
                 [
-                    'data' => [
-                        "first_name" => $input->name->value->first,
-                        "middle_name" => $input->name->value->middle,
-                        "last_name" => $input->name->value->last,
-                        "email_addresses" => [
-                            [
-                                "name" => "Other",
-                                "address" => $input->email->value,
-                                "default_email" => true
-                            ]
-                        ],
-                        "phone_numbers" => [
-                            [
-                                "name" => "Other",
-                                "number" => $input->phone->value,
-                                "default_number" => true
-                            ]
-                        ],
-                    ]
+
+                    "first_name" => $input->name->value->first,
+                    "middle_name" => $input->name->value->middle,
+                    "last_name" => $input->name->value->last,
+                    "email_addresses" => [
+                        [
+                            "name" => "Other",
+                            "address" => $input->email->value,
+                            "default_email" => true
+                        ]
+                    ],
+                    "phone_numbers" => [
+                        [
+                            "name" => "Other",
+                            "number" => $input->phone->value,
+                            "default_number" => true
+                        ]
+                    ],
                 ]
             );
             dump($data);
             $createContact = Http::withToken($tokens->access_token)
                 ->withHeaders(['Content-Type' => 'application/json'])
-                ->post($url, ['body' => $data]);
+                ->post($url, ['data' => $data]);
             dump($createContact->json());
         }
         dd($input);
