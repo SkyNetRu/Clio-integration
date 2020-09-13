@@ -10,12 +10,22 @@ class ClioController extends Controller
 {
     public function index () {
         $tokens = ClioApiTokens::find(1);
+        $current = Carbon::now();
+        $expired = Carbon::parse($tokens->updated_at)
+            ->addSeconds($tokens->expires_in);
         if ($tokens AND true ){
 //            Carbon::parse($tokens->expires_in) < Carbon::now()) {
-            $test =  Socialite::driver('clio')
-                ->with(["grant_type" => "refresh_token", 'refresh_token' => $tokens->refresh_token])
-                ->redirect();
-            dd($test);
+//            $test =  Socialite::driver('clio')
+//                ->with(["grant_type" => "refresh_token", 'refresh_token' => $tokens->refresh_token])
+//                ->redirect();
+
+            $response = Http::post(env('CLIO_BASE_URL', 'https://app.clio.com').'/oauth/token', [
+                "client_id" => env('CLIO_APP_KEY'),
+                "client_secret" => env('CLIO_APP_SECRET'),
+                "grant_type" => "refresh_token",
+                "refresh_token" => $tokens->refresh_token,
+            ]);
+            dd($response);
         }
         return Socialite::driver('clio')->redirect();
     }
