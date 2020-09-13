@@ -18,24 +18,25 @@ class Formstack extends Controller
             dump($getContacts->json());
             $data = \GuzzleHttp\json_encode(
                 [
-
-                    "first_name" => $input->name->value->first,
-                    "middle_name" => $input->name->value->middle,
-                    "last_name" => $input->name->value->last,
-                    "email_addresses" => [
-                        [
-                            "name" => "Other",
-                            "address" => $input->email->value,
-                            "default_email" => true
-                        ]
-                    ],
-                    "phone_numbers" => [
-                        [
-                            "name" => "Other",
-                            "number" => $input->phone->value,
-                            "default_number" => true
-                        ]
-                    ],
+                    'data' => [
+                        "first_name" => $input->name->value->first,
+                        "middle_name" => $input->name->value->middle,
+                        "last_name" => $input->name->value->last,
+                        "email_addresses" => [
+                            [
+                                "name" => "Other",
+                                "address" => $input->email->value,
+                                "default_email" => true
+                            ]
+                        ],
+                        "phone_numbers" => [
+                            [
+                                "name" => "Other",
+                                "number" => $input->phone->value,
+                                "default_number" => true
+                            ]
+                        ],
+                    ]
                 ]
             );
             dump($data);
