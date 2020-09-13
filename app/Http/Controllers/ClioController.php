@@ -27,7 +27,7 @@ class ClioController extends Controller
         $tokens->save();
         dump($tokens);
 
-        $test = Socialite::driver('clio')
+        return Socialite::driver('clio')
             ->with(["grant_type" => "refresh_token", 'refresh_token' => $tokens->refresh_token])
             ->redirect();
         dd($test);
