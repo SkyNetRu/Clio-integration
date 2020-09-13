@@ -40,7 +40,9 @@ class Formstack extends Controller
                 ]
             );
             dump($data);
-            $createContact = Http::withToken($tokens->access_token)->withBody($data)->post($url);
+            $createContact = Http::withToken($tokens->access_token)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->post($url, ['body' => $data]);
             dump($createContact->json());
         }
         dd($input);
