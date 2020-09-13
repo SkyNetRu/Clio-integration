@@ -15,7 +15,7 @@ class ClioController extends Controller
 
     public function callback (Request $request) {
         $user = Socialite::driver('clio')->user();
-        $tokens = ClioApiTokens::firstOrCreate();
+        $tokens = ClioApiTokens::firstOrNew(['id' => 1]);
         $tokens->name = $user->name;
         $tokens->email = $user->email;
         $tokens->user_id = $user->id;
