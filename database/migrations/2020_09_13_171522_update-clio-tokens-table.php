@@ -13,7 +13,7 @@ class UpdateClioTokensTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('clio_api_tokens', function (Blueprint $table) {
             $table->string('name');
             $table->string('email');
             $table->integer('user_id');
@@ -27,7 +27,7 @@ class UpdateClioTokensTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('clio_api_tokens', function (Blueprint $table) {
             $table->dropColumn(['name', 'email', 'user_id']);
         });
     }
