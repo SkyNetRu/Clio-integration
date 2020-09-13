@@ -19,3 +19,4 @@ Route::get('/', function () {
 
 Route::get('clio', 'ClioController@index')->name('clio');
 Route::any('clio_callback', 'ClioController@callback')->name('clio_callback');
+Route::post('handle_form', 'Formstack@handleForm')->name('handle_form');
