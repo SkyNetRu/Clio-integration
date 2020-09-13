@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 class Formstack extends Controller
 {
     public function handleForm (Request $request) {
-        $input = $request->getContent();
-        dump(file_get_contents("php://input"));
+        $input = json_decode($request->getContent());
         dd($input);
     }
 }
