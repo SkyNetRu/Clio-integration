@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\Http;
 use App\ClioApiTokens;
+use Carbon\Carbon;
 
 class ClioController extends Controller
 {
     public function index () {
+        $tokens = ClioApiTokens::find(1);
+        if ($tokens AND true ){
+//            Carbon::parse($tokens->expires_in) < Carbon::now()) {
+            return Socialite::driver('clio')
+                ->with(["grant_type" => "refresh_token", 'refresh_token' => $tokens->refresh_token])
+                ->redirect();
+        }
         return Socialite::driver('clio')->redirect();
     }
 
@@ -26,11 +32,6 @@ class ClioController extends Controller
         $tokens->refresh_token = $user->refreshToken;
         $tokens->save();
         dump($tokens);
-
-        return Socialite::driver('clio')
-            ->with(["grant_type" => "refresh_token", 'refresh_token' => $tokens->refresh_token])
-            ->redirect();
-        dd($test);
     }
 
 }
