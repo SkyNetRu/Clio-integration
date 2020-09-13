@@ -20,12 +20,16 @@ class ClioController extends Controller
 //                ->with(["grant_type" => "refresh_token", 'refresh_token' => $tokens->refresh_token])
 //                ->redirect();
 
-            $response = Http::post(env('CLIO_BASE_URL', 'https://app.clio.com').'/oauth/token', [
+            $url = env('CLIO_BASE_URL', 'https://app.clio.com').'/oauth/token';
+            $params = [
                 "client_id" => env('CLIO_APP_KEY'),
                 "client_secret" => env('CLIO_APP_SECRET'),
                 "grant_type" => "refresh_token",
                 "refresh_token" => $tokens->refresh_token,
-            ]);
+            ];
+            $response = Http::post($url, $params);
+            dump($url);
+            dump($params);
             dd($response);
         }
         return Socialite::driver('clio')->redirect();
