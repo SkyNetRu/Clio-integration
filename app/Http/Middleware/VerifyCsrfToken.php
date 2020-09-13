@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'formstack/*',
-        'https://www.formstack.com/*'
+        'https://www.formstack.com/*',
+        'formstack/handle_form'
     ];
 }
