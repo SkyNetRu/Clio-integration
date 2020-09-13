@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 class Formstack extends Controller
 {
     public function handleForm (Request $request) {
-        dd($request);
+        $input = $request->all();
+        dd($input);
     }
 }
