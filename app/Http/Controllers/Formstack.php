@@ -115,10 +115,13 @@ class Formstack extends Controller
                 ]
         ];
 
+        dump($associatedContact);
         $matter = $this->updateMatter($data, $matter['id']);
-        $matterAssoc = $this->getMattersByContactID($associatedContact['id']);
-        dump($matter);
-        dump($matterAssoc);
+//        $query = ['fname' => ];
+//        $matterAssoc = $this->getMattersByQuery($query);
+//        //$matterAssoc = $this->getMattersByQuery($associatedContact['id']);
+//        dump($matter);
+//        dump($matterAssoc);
         //dd($input);
     }
 
@@ -189,6 +192,19 @@ class Formstack extends Controller
     {
         return Http::withToken($this->tokens->access_token)
             ->withOptions(['query' => ['client_id' => $contact_id]])
+            ->get($this->url_matters)->json();
+    }
+
+    /**
+     * Get Matters by query from Clio API
+     *
+     * @param array
+     * @return array
+     */
+    public function getMattersByQuery($query)
+    {
+        return Http::withToken($this->tokens->access_token)
+            ->withOptions(['query' => $query])
             ->get($this->url_matters)->json();
     }
 }
