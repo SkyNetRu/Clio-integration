@@ -54,7 +54,7 @@ class Formstack extends Controller
                     ]
             ];
             dump($data);
-            $contact = $this->createContact($data)['data'];
+            $contact = $this->createContact($data);
             dump($contact);
         } else {
             $contact = $contact['data'][0];
@@ -71,7 +71,7 @@ class Formstack extends Controller
                         "description" => 'description'
                     ]
             ];
-            $matter = $this->createMatter($data);
+            $matter = $this->createMatter($data)['data'];
         }
         dump($matter);
 
@@ -93,12 +93,29 @@ class Formstack extends Controller
                         "type" => "Person",
                     ]
             ];
-            $associatedContact = $this->createContact($data)['data'];
+            $associatedContact = $this->createContact($data);
             dump($associatedContact);
         } else {
             $associatedContact = $associatedContact['data'][0];
         }
+
+        $data = [
+            'data' =>
+                [
+                    "relationships" => [
+                        [
+                            "description" => "Associated contact",
+                            "contact" => [
+                                'id' => $associatedContact['id']
+                            ],
+                        ]
+                    ],
+                ]
+        ];
+
+        $matter = $this->updateMatter($data, $matter['id']);
         $matterAssoc = $this->getMattersByContactID($associatedContact['id']);
+        dump($matter);
         dump($matterAssoc);
         dd($input);
     }
@@ -115,11 +132,11 @@ class Formstack extends Controller
         return Http::withToken($this->tokens->access_token)
             ->withHeaders(['Content-Type' => 'application/json'])
             ->withOptions(['json' => $data])
-            ->post($this->url_contact)->json();
+            ->post($this->url_contact)->json()['data'];
     }
 
     /**
-     * Create Contact in Clio, return created contact
+     * Create Matter in Clio, return created matter
      *
      * @param array
      * @return array
@@ -129,7 +146,22 @@ class Formstack extends Controller
         return Http::withToken($this->tokens->access_token)
             ->withHeaders(['Content-Type' => 'application/json'])
             ->withOptions(['json' => $data])
-            ->post($this->url_matters)->json();
+            ->post($this->url_matters)->json()['data'];
+    }
+
+    /**
+     * Update Matter in Clio, return created matter
+     *
+     * @param array
+     * @return array
+     */
+    public function updateMatter($data, $id)
+    {
+        $url = env('CLIO_API_URL') . 'matters/'.$id.'.json';
+        return Http::withToken($this->tokens->access_token)
+            ->withHeaders(['Content-Type' => 'application/json'])
+            ->withOptions(['json' => $data])
+            ->patch($url)->json()['data'];
     }
 
     /**
