@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\ClioApiTokens;
 use Illuminate\Support\Facades\Http;
@@ -24,7 +23,7 @@ class Formstack extends Controller
     {
         $input = json_decode($request->getContent());
         if ($input->HandshakeKey != env('FORMSTACK_KEY')) {
-            return Response::json(['error' => 'Invalid Form Key'],401);
+            return response()->json(['error' => 'Invalid Form Key'],401);
         }
 
         $contact = $this->getContactByEmail($input->email->value);
