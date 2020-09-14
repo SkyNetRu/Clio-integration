@@ -11,6 +11,8 @@ class Formstack extends Controller
     public $tokens = null;
     public $url_contact = '';
     public $url_matters = '';
+    public $contacts_fields = 'phone_numbers,email_addresses,addresses';
+    public $matters_fields = 'relationships';
 
     public function __construct()
     {
@@ -26,7 +28,7 @@ class Formstack extends Controller
             return response()->json(['error' => 'Invalid Form Key'],401);
         }
 
-        $contact = $this->getByQuery(['query' => $input->email->value], 'contacts');
+        $contact = $this->getByQuery(['query' => $input->email->value, 'fields' => $this->contacts_fields], 'contacts');
 
         if ($contact['meta']['records'] == 0) {
             $data = [
@@ -52,12 +54,11 @@ class Formstack extends Controller
                         "type" => "Person",
                     ]
             ];
-            $contact = $this->createContact($data);
+            $contact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts');
         } else {
             $contact = $contact['data'][0];
         }
-        $matter = $this->getByQuery(['client_id' => $contact['id']], 'matters');
-        //$matter = $this->getMattersByContactID($contact['id']);
+        $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
         if ($matter['meta']['records'] == 0) {
             $data = [
                 'data' =>
@@ -68,12 +69,12 @@ class Formstack extends Controller
                         "description" => 'description'
                     ]
             ];
-            $matter = $this->createMatter($data);
+            $matter = $this->create($data, ['fields' => $this->matters_fields], 'matters');
         } else {
             $matter = $matter['data'][0];
         }
 
-        $associatedContact = $this->getByQuery(['query' => $input->associated_email->value], 'contacts');
+        $associatedContact = $this->getByQuery(['query' => $input->associated_email->value, 'fields' => $this->contacts_fields], 'contacts');
         if ($associatedContact['meta']['records'] == 0) {
             $data = [
                 'data' =>
@@ -91,7 +92,7 @@ class Formstack extends Controller
                         "type" => "Person",
                     ]
             ];
-            $associatedContact = $this->createContact($data);
+            $associatedContact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts');
         } else {
             $associatedContact = $associatedContact['data'][0];
         }
@@ -109,13 +110,13 @@ class Formstack extends Controller
                     ],
                 ]
         ];
-        $this->update($data, $matter['id'], 'matters');
+        $this->update($data, $matter['id'], ['fields' => $this->matters_fields],'matters');
 
         dump($contact);
         dump($associatedContact);
 
-        $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => 'relationships'], 'matters');
-        $matterAssoc = $this->getByQuery(['query' => $associatedContact['name']], 'matters');
+        $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
+        $matterAssoc = $this->getByQuery(['query' => $associatedContact['name'], 'fields' => $this->matters_fields], 'matters');
 
 
         dump($matter);
@@ -124,87 +125,47 @@ class Formstack extends Controller
 
 
     /**
-     * Create Contact in Clio, return created contact
+     * Create instance Clio, return created instance
      *
-     * @param array
+     * @param $data array
+     * @param $query array
+     * @param $type string
      * @return array
      */
-    public function createContact($data)
+    public function create($data, $query, $type)
     {
+        $url = env('CLIO_API_URL') .$type.'.json';
         return Http::withToken($this->tokens->access_token)
             ->withHeaders(['Content-Type' => 'application/json'])
-            ->withOptions(['json' => $data])
-            ->post($this->url_contact)->json()['data'];
+            ->withOptions(['json' => $data] + $query)
+            ->post($url)->json()['data'];
     }
 
     /**
-     * Create Matter in Clio, return created matter
+     * Update instance in Clio, return updated instance
      *
-     * @param array
+     * @param $data array
+     * @param $id string|integer
+     * @param $query array
+     * @param $type string
      * @return array
      */
-    public function createMatter($data)
-    {
-        return Http::withToken($this->tokens->access_token)
-            ->withHeaders(['Content-Type' => 'application/json'])
-            ->withOptions(['json' => $data])
-            ->post($this->url_matters)->json()['data'];
-    }
-
-    /**
-     * Update in Clio, return created instance
-     *
-     * @param array
-     * @return array
-     */
-    public function update($data, $id, $type)
+    public function update($data, $id, $query, $type)
     {
         $url = env('CLIO_API_URL') . $type. '/'.$id.'.json';
         return Http::withToken($this->tokens->access_token)
             ->withHeaders(['Content-Type' => 'application/json'])
-            ->withOptions(['json' => $data])
+            ->withOptions(['json' => $data] + $query)
             ->patch($url)->json()['data'];
     }
 
     /**
-     * Get Contact by email from Clio API
+     * Get instance from Clio, return instance
      *
-     * @param string
+     * @param $query array
+     * @param $type string
      * @return array
      */
-    public function getContactByEmail($email)
-    {
-        return Http::withToken($this->tokens->access_token)
-            ->withOptions(['query' => ['query' => $email]])
-            ->get($this->url_contact)->json();
-    }
-
-    /**
-     * Get Matters by Contact ID from Clio API
-     *
-     * @param string|integer
-     * @return array
-     */
-    public function getMattersByContactID($contact_id)
-    {
-        return Http::withToken($this->tokens->access_token)
-            ->withOptions(['query' => ['client_id' => $contact_id]])
-            ->get($this->url_matters)->json();
-    }
-
-    /**
-     * Get Matters by query from Clio API
-     *
-     * @param array
-     * @return array
-     */
-    public function getMattersByQuery($query)
-    {
-        return Http::withToken($this->tokens->access_token)
-            ->withOptions(['query' => $query])
-            ->get($this->url_matters)->json();
-    }
-
     public function getByQuery ($query, $type) {
         $url = env('CLIO_API_URL') .$type.'.json';
         return Http::withToken($this->tokens->access_token)
