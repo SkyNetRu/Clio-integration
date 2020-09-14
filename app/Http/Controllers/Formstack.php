@@ -27,7 +27,7 @@ class Formstack extends Controller
         }
 
         $contact = $this->getContactByEmail($input->email->value);
-        $contact2 = $this->getByQuery(['email' => $input->email->value], 'contacts');
+        $contact2 = $this->getByQuery(['query' => $input->email->value], 'contacts');
 
         dump($contact);
         dd($contact2);
