@@ -68,6 +68,7 @@ class Formstack extends Controller
                         "client" => [
                             'id' => $contact['id']
                         ],
+                        "description" => 'description'
                     ]
             ];
             $matter = $this->createMatter($data);
