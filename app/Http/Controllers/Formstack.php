@@ -24,6 +24,7 @@ class Formstack extends Controller
         $input = json_decode($request->getContent());
         dump($input->HandshakeKey);
         dump(env('FORMSTACK_KEY'));
+        dump(env('CLIO_API_URL'));
         if ($input->HandshakeKey != env('FORMSTACK_KEY')) {
             return response()->json(['error' => 'Invalid Form Key'],401);
         }
