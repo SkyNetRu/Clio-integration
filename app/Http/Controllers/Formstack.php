@@ -54,13 +54,14 @@ class Formstack extends Controller
                     ]
             ];
             dump($data);
-            $contact = $this->createContact($data);
+            $contact = $this->createContact($data)['data'];
             dump($contact);
         } else {
-            //$contact =
+            $contact = $contact['data'][0];
         }
 
-        //$matter = $this->getMattersByContactID($contact['id']);
+        $matter = $this->getMattersByContactID($contact['id']);
+        dump($matter);
 
         $associatedContact = $this->getContactByEmail($input->associated_email->value);
         if ($associatedContact['meta']['records'] == 0) {
@@ -80,10 +81,13 @@ class Formstack extends Controller
                         "type" => "Person",
                     ]
             ];
-            $createdAssociatedContact = $this->createContact($data);
-            dump($createdAssociatedContact);
+            $associatedContact = $this->createContact($data)['data'];
+            dump($associatedContact);
+        } else {
+            $associatedContact = $associatedContact['data'][0];
         }
-
+        $matterAssoc = $this->getMattersByContactID($associatedContact['id']);
+        dump($matterAssoc);
         dd($input);
     }
 
