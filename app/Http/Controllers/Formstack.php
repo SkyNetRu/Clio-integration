@@ -22,9 +22,6 @@ class Formstack extends Controller
     public function handleForm(Request $request)
     {
         $input = json_decode($request->getContent());
-        dump($input->HandshakeKey);
-        dump(env('FORMSTACK_KEY'));
-        dump(env('CLIO_API_URL'));
         if ($input->HandshakeKey != env('FORMSTACK_KEY')) {
             return response()->json(['error' => 'Invalid Form Key'],401);
         }
@@ -110,7 +107,7 @@ class Formstack extends Controller
     public function getContactByEmail($email)
     {
         dump($email);
-        dump($this->url_contact);
+        dd($this->url_contact);
         return Http::withToken($this->tokens->access_token)
             ->withOptions(['query' => ['query' => $email]])
             ->get($this->url_contact)->json();
