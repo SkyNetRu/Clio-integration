@@ -11,7 +11,7 @@ class Formstack extends Controller
     public $tokens = null;
     public $url_contact = '';
     public $url_matters = '';
-    public $contacts_fields = 'id,etag,phone_numbers,email_addresses,addresses,name,fname,lname';
+    public $contacts_fields = 'id,etag,phone_numbers,email_addresses,addresses,name,first_name,middle_name,last_name';
     public $matters_fields = 'id,etag,relationships';
 
     public function __construct()
@@ -29,7 +29,7 @@ class Formstack extends Controller
         }
 
         $contact = $this->getByQuery(['query' => $input->email->value, 'fields' => $this->contacts_fields], 'contacts');
-dd($contact);
+
         if ($contact['meta']['records'] == 0) {
             $data = [
                 'data' =>
