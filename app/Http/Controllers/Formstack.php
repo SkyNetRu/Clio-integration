@@ -54,10 +54,11 @@ class Formstack extends Controller
                         "type" => "Person",
                     ]
             ];
-            $contact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts');
+            $contact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts')['data'];
         } else {
             $contact = $contact['data'][0];
         }
+
         $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
         if ($matter['meta']['records'] == 0) {
             $data = [
@@ -92,7 +93,7 @@ class Formstack extends Controller
                         "type" => "Person",
                     ]
             ];
-            $associatedContact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts');
+            $associatedContact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts')['data'];
         } else {
             $associatedContact = $associatedContact['data'][0];
         }
@@ -115,8 +116,8 @@ class Formstack extends Controller
         dump($contact);
         dump($associatedContact);
 
-        $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
-        $matterAssoc = $this->getByQuery(['query' => $associatedContact['name'], 'fields' => $this->matters_fields], 'matters');
+        $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters')['data'];
+        $matterAssoc = $this->getByQuery(['query' => $associatedContact['name'], 'fields' => $this->matters_fields], 'matters')['data'];
 
 
         dump($matter);
