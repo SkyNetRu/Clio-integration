@@ -21,7 +21,10 @@ class Formstack extends Controller
         if ($input->HandshakeKey == env('FORMSTACK_KEY')) {
 
             $url = env('CLIO_API_URL') . 'contacts.json';
-            $getContacts = Http::withToken($this->tokens->access_token)->get($url);
+            $getContacts = Http::withToken($this->tokens->access_token)
+                ->withOptions(['query' => ['query' => $input->email->value]])
+                ->get($url);
+
             dump($getContacts->json());
 //            $data = ['data' =>
 //                [
