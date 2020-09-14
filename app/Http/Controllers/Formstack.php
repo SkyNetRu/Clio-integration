@@ -61,6 +61,17 @@ class Formstack extends Controller
         }
 
         $matter = $this->getMattersByContactID($contact['id']);
+        if ($matter['meta']['records'] == 0) {
+            $data = [
+                'data' =>
+                    [
+                        "client" => [
+                            'id' => $contact['id']
+                        ],
+                    ]
+            ];
+            $matter = $this->createMatter($data);
+        }
         dump($matter);
 
         $associatedContact = $this->getContactByEmail($input->associated_email->value);
@@ -106,6 +117,19 @@ class Formstack extends Controller
             ->post($this->url_contact)->json();
     }
 
+    /**
+     * Create Contact in Clio, return created contact
+     *
+     * @param array
+     * @return array
+     */
+    public function createMatter($data)
+    {
+        return Http::withToken($this->tokens->access_token)
+            ->withHeaders(['Content-Type' => 'application/json'])
+            ->withOptions(['json' => $data])
+            ->post($this->url_matters)->json();
+    }
 
     /**
      * Get Contact by email from Clio API
