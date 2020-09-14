@@ -15,8 +15,8 @@ class Formstack extends Controller
     public function __construct()
     {
         $this->tokens = ClioApiTokens::find(1);
-        $url_contact = env('CLIO_API_URL') . 'contacts.json';
-        $url_matters = env('CLIO_API_URL') . 'matters.json';
+        $this->url_contact = env('CLIO_API_URL') . 'contacts.json';
+        $this->url_matters = env('CLIO_API_URL') . 'matters.json';
     }
 
     public function handleForm(Request $request)
@@ -106,8 +106,6 @@ class Formstack extends Controller
      */
     public function getContactByEmail($email)
     {
-        dump($email);
-        dd($this->url_contact);
         return Http::withToken($this->tokens->access_token)
             ->withOptions(['query' => ['query' => $email]])
             ->get($this->url_contact)->json();
