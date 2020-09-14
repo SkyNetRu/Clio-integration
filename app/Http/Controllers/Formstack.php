@@ -60,7 +60,7 @@ class Formstack extends Controller
             $contact = $contact['data'][0];
         }
 
-        $matter = $this->getMattersByContactID($contact['id']);
+        $matter = $this->getMattersByContactID($contact['id'])['data'][0];
         if ($matter['meta']['records'] == 0) {
             $data = [
                 'data' =>
@@ -71,7 +71,7 @@ class Formstack extends Controller
                         "description" => 'description'
                     ]
             ];
-            $matter = $this->createMatter($data)['data'];
+            $matter = $this->createMatter($data);
         }
         dump($matter);
 
