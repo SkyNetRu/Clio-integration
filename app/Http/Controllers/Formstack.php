@@ -117,11 +117,11 @@ class Formstack extends Controller
 
         dump($associatedContact);
         $matter = $this->updateMatter($data, $matter['id']);
-//        $query = ['fname' => ];
-//        $matterAssoc = $this->getMattersByQuery($query);
+        $query = ['name' => $associatedContact['name']];
+        $matterAssoc = $this->getMattersByQuery($query);
 //        //$matterAssoc = $this->getMattersByQuery($associatedContact['id']);
-//        dump($matter);
-//        dump($matterAssoc);
+        dump($matter);
+        dump($matterAssoc);
         //dd($input);
     }
 
