@@ -22,6 +22,8 @@ class Formstack extends Controller
     public function handleForm(Request $request)
     {
         $input = json_decode($request->getContent());
+        dump($input->HandshakeKey);
+        dump(env('FORMSTACK_KEY'));
         if ($input->HandshakeKey != env('FORMSTACK_KEY')) {
             return response()->json(['error' => 'Invalid Form Key'],401);
         }
