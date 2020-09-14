@@ -107,6 +107,8 @@ class Formstack extends Controller
      */
     public function getContactByEmail($email)
     {
+        dump($email);
+        dump($this->url_contact);
         return Http::withToken($this->tokens->access_token)
             ->withOptions(['query' => ['query' => $email]])
             ->get($this->url_contact)->json();
