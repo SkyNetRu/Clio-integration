@@ -11,8 +11,8 @@ class Formstack extends Controller
     public $tokens = null;
     public $url_contact = '';
     public $url_matters = '';
-    public $contacts_fields = 'phone_numbers,email_addresses,addresses';
-    public $matters_fields = 'relationships';
+    public $contacts_fields = 'id,etag,phone_numbers,email_addresses,addresses';
+    public $matters_fields = 'id,etag,relationships';
 
     public function __construct()
     {
@@ -59,7 +59,6 @@ class Formstack extends Controller
             $contact = $contact['data'][0];
         }
 
-        dd($contact);
         $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
         if ($matter['meta']['records'] == 0) {
             $data = [
