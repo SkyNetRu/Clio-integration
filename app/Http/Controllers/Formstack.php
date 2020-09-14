@@ -26,11 +26,7 @@ class Formstack extends Controller
             return response()->json(['error' => 'Invalid Form Key'],401);
         }
 
-        $contact = $this->getContactByEmail($input->email->value);
-        $contact2 = $this->getByQuery(['query' => $input->email->value], 'contacts');
-
-        dump($contact);
-        dd($contact2);
+        $contact = $this->getByQuery(['query' => $input->email->value], 'contacts');
 
         if ($contact['meta']['records'] == 0) {
             $data = [
@@ -56,14 +52,12 @@ class Formstack extends Controller
                         "type" => "Person",
                     ]
             ];
-            //dump($data);
             $contact = $this->createContact($data);
-            //dump($contact);
         } else {
             $contact = $contact['data'][0];
         }
-
-        $matter = $this->getMattersByContactID($contact['id']);
+        $matter = $this->getByQuery(['client_id' => $contact['id']], 'matters');
+        //$matter = $this->getMattersByContactID($contact['id']);
         if ($matter['meta']['records'] == 0) {
             $data = [
                 'data' =>
@@ -78,9 +72,8 @@ class Formstack extends Controller
         } else {
             $matter = $matter['data'][0];
         }
-        //dump($matter);
 
-        $associatedContact = $this->getContactByEmail($input->associated_email->value);
+        $associatedContact = $this->getByQuery(['query' => $input->associated_email->value], 'contacts');
         if ($associatedContact['meta']['records'] == 0) {
             $data = [
                 'data' =>
@@ -99,7 +92,6 @@ class Formstack extends Controller
                     ]
             ];
             $associatedContact = $this->createContact($data);
-            dump($associatedContact);
         } else {
             $associatedContact = $associatedContact['data'][0];
         }
@@ -117,18 +109,16 @@ class Formstack extends Controller
                     ],
                 ]
         ];
+        $this->update($data, $matter['id'], 'matters');
 
+        dump($contact);
         dump($associatedContact);
-        $matter = $this->updateMatter($data, $matter['id']);
-        $query = ['name' => $associatedContact['name']];
-        $matterAssoc = $this->getMattersByQuery($query)['data'][0];
 
-        $query = ['name' => $contact['name']];
-        $matter = $this->getMattersByQuery($query)['data'][0];
-//        //$matterAssoc = $this->getMattersByQuery($associatedContact['id']);
+        $matterAssoc = $this->getByQuery(['name' => $associatedContact['name']], 'matters');
+
+        $matter = $this->getByQuery(['name' => $contact['name']], 'matters');
         dump($matter);
         dump($matterAssoc);
-        //dd($input);
     }
 
 
@@ -161,14 +151,14 @@ class Formstack extends Controller
     }
 
     /**
-     * Update Matter in Clio, return created matter
+     * Update in Clio, return created instance
      *
      * @param array
      * @return array
      */
-    public function updateMatter($data, $id)
+    public function update($data, $id, $type)
     {
-        $url = env('CLIO_API_URL') . 'matters/'.$id.'.json';
+        $url = env('CLIO_API_URL') . $type. '/'.$id.'.json';
         return Http::withToken($this->tokens->access_token)
             ->withHeaders(['Content-Type' => 'application/json'])
             ->withOptions(['json' => $data])
