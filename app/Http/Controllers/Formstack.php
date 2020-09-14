@@ -11,7 +11,7 @@ class Formstack extends Controller
     public $tokens = null;
     public $url_contact = '';
     public $url_matters = '';
-    public $contacts_fields = 'id,etag,phone_numbers,email_addresses,addresses';
+    public $contacts_fields = 'id,etag,phone_numbers,email_addresses,addresses,name,fname,lname';
     public $matters_fields = 'id,etag,relationships';
 
     public function __construct()
