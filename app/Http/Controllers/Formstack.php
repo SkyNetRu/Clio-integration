@@ -27,7 +27,10 @@ class Formstack extends Controller
         }
 
         $contact = $this->getContactByEmail($input->email->value);
-        //dump($contact);
+        $contact2 = $this->getByQuery(['email' => $input->email->value], 'contacts');
+
+        dump($contact);
+        dd($contact2);
 
         if ($contact['meta']['records'] == 0) {
             $data = [
@@ -209,5 +212,12 @@ class Formstack extends Controller
         return Http::withToken($this->tokens->access_token)
             ->withOptions(['query' => $query])
             ->get($this->url_matters)->json();
+    }
+
+    public function getByQuery ($query, $type) {
+        $url = env('CLIO_API_URL') .$type.'.json';
+        return Http::withToken($this->tokens->access_token)
+            ->withOptions(['query' => $query])
+            ->get($url)->json();
     }
 }
