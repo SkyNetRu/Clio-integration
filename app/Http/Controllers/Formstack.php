@@ -98,20 +98,32 @@ class Formstack extends Controller
             $associatedContact = $associatedContact['data'][0];
         }
 
-        $data = [
-            'data' =>
-                [
-                    "relationships" => [
-                        [
-                            "description" => "Associated contact",
-                            "contact" => [
-                                'id' => $associatedContact['id']
-                            ],
-                        ]
-                    ],
-                ]
-        ];
-        $this->update($data, $matter['id'], ['fields' => $this->matters_fields],'matters');
+        $matter_assoc_contact = false;
+        foreach ($matter['relationships'] as $relationship) {
+            if ($relationship['contact']['id'] == $associatedContact['id']) {
+                $matter_assoc_contact = true;
+                break;
+            }
+        }
+
+        if (!$matter_assoc_contact) {
+            $data = [
+                'data' =>
+                    [
+                        "relationships" => [
+                            [
+                                "description" => "Associated contact",
+                                "contact" => [
+                                    'id' => $associatedContact['id']
+                                ],
+                            ]
+                        ],
+                    ]
+            ];
+            $this->update($data, $matter['id'], ['fields' => $this->matters_fields],'matters');
+        }
+
+
 
         dump($contact);
         dump($associatedContact);
