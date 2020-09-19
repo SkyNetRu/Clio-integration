@@ -117,7 +117,7 @@ class Formstack extends Controller
         dump($associatedContact);
 
         $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters')['data'];
-        $matterAssoc = $this->getByQuery(['query' => $associatedContact['name'], 'fields' => $this->matters_fields], 'matters')['data'];
+        $matterAssoc = $this->getByQuery(['originating_attorney_id' => $associatedContact['id'], 'fields' => $this->matters_fields], 'matters')['data'];
 
 
         dump($matter);
