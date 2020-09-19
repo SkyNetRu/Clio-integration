@@ -29,6 +29,7 @@ class Formstack extends Controller
         }
 
         $contact = $this->getByQuery(['query' => $input->email->value, 'fields' => $this->contacts_fields], 'contacts');
+        dd($contact);
 
         if ($contact['meta']['records'] == 0) {
             $data = [
