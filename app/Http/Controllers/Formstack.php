@@ -55,7 +55,6 @@ class Formstack extends Controller
                     ]
             ];
             $contact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts');
-            dd($contact);
         } else {
             $contact = $contact['data'][0];
         }
@@ -94,7 +93,7 @@ class Formstack extends Controller
                         "type" => "Person",
                     ]
             ];
-            $associatedContact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts')['data'];
+            $associatedContact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts');
         } else {
             $associatedContact = $associatedContact['data'][0];
         }
