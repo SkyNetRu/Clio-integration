@@ -143,10 +143,24 @@ class Formstack extends Controller
 
     public function searchContactInMatter ($contact_id) {
         $matters = $this->getByQuery(['fields' => $this->matters_fields], 'matters')['data'];
+        $matters_arr = [];
         if ($matters) {
-
+            foreach ($matters as $matter) {
+                foreach ($matter['relationships'] as $relationship) {
+                    if ($relationship['contact']['id'] == $contact_id) {
+                        $matters_arr[] = $matter['id'];
+                        break;
+                    }
+                }
+                if ($matter['client']['id'] == $contact_id) {
+                    $matters_arr[] = $matter['id'];
+                }
+            }
         }
+        $matters_arr = array_unique($matters_arr);
+
         dump($contact_id);
+        dump($matters_arr);
         dd($matters);
     }
 
