@@ -154,6 +154,13 @@ class Formstack extends Controller
         dump($matters);
     }
 
+
+    /**
+     * Search Matters with Contact ID
+     *
+     * @param $contact_id int
+     * @return array
+     */
     public function searchMattersWithContact ($contact_id) {
         $matters = $this->getByQuery(['fields' => $this->matters_fields], 'matters')['data'];
         $matters_arr = [];
