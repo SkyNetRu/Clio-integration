@@ -60,7 +60,6 @@ class Formstack extends Controller
             $contact = $contact['data'][0];
         }
 
-        //$this->searchContactInMatter($contact['id']);
         $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
 
         if ($matter['meta']['records'] == 0) {
@@ -103,12 +102,14 @@ class Formstack extends Controller
 
         $relationships = $this->getByQuery(['contact_id' => $associatedContact['id'], 'fields' => $this->relationships_fields], 'relationships');
         //dd($relationships);
-        dd($matter);
+
         $matter_assoc_contact = false;
-        foreach ($matter['relationships'] as $relationship) {
-            if ($relationship['contact']['id'] == $associatedContact['id']) {
-                $matter_assoc_contact = true;
-                break;
+        if ($matter['relationships']) {
+            foreach ($matter['relationships'] as $relationship) {
+                if ($relationship['contact']['id'] == $associatedContact['id']) {
+                    $matter_assoc_contact = true;
+                    break;
+                }
             }
         }
 
