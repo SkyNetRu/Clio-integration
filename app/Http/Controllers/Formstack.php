@@ -62,7 +62,7 @@ class Formstack extends Controller
 
         $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
 
-        $this->searchContactInMatter($contact['id']);
+        //$this->searchContactInMatter($contact['id']);
         if ($matter['meta']['records'] == 0) {
             $data = [
                 'data' =>
@@ -100,9 +100,6 @@ class Formstack extends Controller
         } else {
             $associatedContact = $associatedContact['data'][0];
         }
-
-        $relationships = $this->getByQuery(['contact_id' => $associatedContact['id'], 'fields' => $this->relationships_fields], 'relationships');
-        dd($relationships);
 
         $matter_assoc_contact = false;
         if (isset($matter['relationships'])) {
