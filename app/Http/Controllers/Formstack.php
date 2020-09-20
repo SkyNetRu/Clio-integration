@@ -60,10 +60,8 @@ class Formstack extends Controller
             $contact = $contact['data'][0];
         }
 
-        $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
-
-        $this->searchContactInMatter($contact['id']);
-        if ($matter['meta']['records'] == 0) {
+        $matters = $this->searchMattersWithContact($contact['id']);
+        if (count($matters) == 0) {
             $data = [
                 'data' =>
                     [
@@ -75,7 +73,7 @@ class Formstack extends Controller
             ];
             $matter = $this->create($data, ['fields' => $this->matters_fields], 'matters');
         } else {
-            $matter = $matter['data'][0];
+            $matter = $this->getByQuery(['id' => $matters[0], 'fields' => $this->matters_fields], 'matters');
         }
 
         $associatedContact = $this->getByQuery(['query' => $input->associated_email->value, 'fields' => $this->contacts_fields], 'contacts');
@@ -101,17 +99,9 @@ class Formstack extends Controller
             $associatedContact = $associatedContact['data'][0];
         }
 
-        $matter_assoc_contact = false;
-        if (isset($matter['relationships'])) {
-            foreach ($matter['relationships'] as $relationship) {
-                if ($relationship['contact']['id'] == $associatedContact['id']) {
-                    $matter_assoc_contact = true;
-                    break;
-                }
-            }
-        }
+        $assoc_matters = $this->searchMattersWithContact($associatedContact['id']);
 
-        if (!$matter_assoc_contact) {
+        if (count($assoc_matters) == 0) {
             $data = [
                 'data' =>
                     [
@@ -130,18 +120,18 @@ class Formstack extends Controller
 
 
 
-        dump($contact);
-        dump($associatedContact);
+       //dump($contact);
+        //dump($associatedContact);
 
-        $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters')['data'];
+        //$matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters')['data'];
         $matters = $this->getByQuery(['fields' => $this->matters_fields], 'matters');
 
 
-        dump($matter);
+        //dump($matter);
         dump($matters);
     }
 
-    public function searchContactInMatter ($contact_id) {
+    public function searchMattersWithContact ($contact_id) {
         $matters = $this->getByQuery(['fields' => $this->matters_fields], 'matters')['data'];
         $matters_arr = [];
         if ($matters) {
@@ -157,11 +147,7 @@ class Formstack extends Controller
                 }
             }
         }
-        $matters_arr = array_unique($matters_arr);
-
-        dump($contact_id);
-        dump($matters_arr);
-        dd($matters);
+        return array_unique($matters_arr);
     }
 
 
