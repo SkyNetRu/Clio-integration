@@ -60,6 +60,8 @@ class Formstack extends Controller
             $contact = $contact['data'][0];
         }
 
+        //$matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
+
         $matters = $this->searchMattersWithContact($contact['id']);
         if (count($matters) == 0) {
             $data = [
@@ -99,9 +101,17 @@ class Formstack extends Controller
             $associatedContact = $associatedContact['data'][0];
         }
 
-        $assoc_matters = $this->searchMattersWithContact($associatedContact['id']);
+        $matter_assoc_contact = false;
+        if (isset($matter['relationships'])) {
+            foreach ($matter['relationships'] as $relationship) {
+                if ($relationship['contact']['id'] == $associatedContact['id']) {
+                    $matter_assoc_contact = true;
+                    break;
+                }
+            }
+        }
 
-        if (count($assoc_matters) == 0) {
+        if (!$matter_assoc_contact AND $matter) {
             $data = [
                 'data' =>
                     [
@@ -117,17 +127,7 @@ class Formstack extends Controller
             ];
             $this->update($data, $matter['id'], ['fields' => $this->matters_fields],'matters');
         }
-
-
-
-       //dump($contact);
-        //dump($associatedContact);
-
-        //$matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters')['data'];
         $matters = $this->getByQuery(['fields' => $this->matters_fields], 'matters');
-
-
-        //dump($matter);
         dump($matters);
     }
 
