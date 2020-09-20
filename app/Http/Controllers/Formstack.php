@@ -75,8 +75,7 @@ class Formstack extends Controller
             ];
             $matter = $this->create($data, ['fields' => $this->matters_fields], 'matters');
         } else {
-            $matter = $this->getByQuery(['id' => $matters[0], 'fields' => $this->matters_fields], 'matters');
-            dd($matter);
+            $matter = $this->getByQuery(['id' => $matters[0], 'fields' => $this->matters_fields], 'matters')['data'];
         }
 
         $associatedContact = $this->getByQuery(['query' => $input->associated_email->value, 'fields' => $this->contacts_fields], 'contacts');
