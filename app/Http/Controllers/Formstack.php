@@ -62,6 +62,7 @@ class Formstack extends Controller
 
         //$this->searchContactInMatter($contact['id']);
         $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
+        dd($matter);
         if ($matter['meta']['records'] == 0) {
             $data = [
                 'data' =>
