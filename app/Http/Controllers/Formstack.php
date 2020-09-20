@@ -14,12 +14,16 @@ class Formstack extends Controller
     public $contacts_fields = 'id,etag,phone_numbers,email_addresses,addresses,name,first_name,middle_name,last_name';
     public $matters_fields = 'id,etag,relationships,client';
     public $relationships_fields = 'id,etag,description,matter,contact';
+    public $clio_grow = false;
 
     public function __construct()
     {
         $this->tokens = ClioApiTokens::find(1);
         $this->url_contact = env('CLIO_API_URL') . 'contacts.json';
         $this->url_matters = env('CLIO_API_URL') . 'matters.json';
+        if (env('CLIO_GROW_TOKEN', null)) {
+            $this->clio_grow = true;
+        }
     }
 
     public function handleForm(Request $request)
@@ -151,6 +155,18 @@ class Formstack extends Controller
             $this->update($data, $matter['id'], ['fields' => $this->matters_fields],'matters');
         }
         $matters = $this->getByQuery(['fields' => $this->matters_fields], 'matters');
+
+        if ($this->clio_grow) {
+            $data = [
+                "from_first" => $input->name->value->first,
+                "from_last" => $input->name->value->last,
+                "from_message" => "New Formstack Lead",
+                "from_email" => $input->email->value,
+                "from_phone" => $input->phone->value,
+                "from_source" => "Formstack Form"
+            ];
+            $this->sendGrowLeadInbox($data);
+        }
         dump($matters);
     }
 
@@ -228,5 +244,14 @@ class Formstack extends Controller
         return Http::withToken($this->tokens->access_token)
             ->withOptions(['query' => $query])
             ->get($url)->json();
+    }
+
+    public function sendGrowLeadInbox($inbox_lead) {
+        $data = [
+            'inbox_lead' => $inbox_lead,
+            'inbox_lead_token' => env('CLIO_GROW_TOKEN')
+        ];
+        return Http::withHeaders(['Content-Type' => 'application/json'])
+            ->post('https://grow.clio.com/inbox_leads', $data)->json();
     }
 }
