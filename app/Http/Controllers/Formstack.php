@@ -101,7 +101,7 @@ class Formstack extends Controller
         }
 
         $relationships = $this->getByQuery(['contact_id' => $associatedContact['id'], 'fields' => $this->relationships_fields], 'relationships');
-        //dd($relationships);
+        dd($relationships);
 
         $matter_assoc_contact = false;
         if (isset($matter['relationships'])) {
