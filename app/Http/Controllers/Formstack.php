@@ -59,6 +59,7 @@ class Formstack extends Controller
             $contact = $contact['data'][0];
         }
 
+        $this->searchContactInMatter($contact['id']);
         $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
         if ($matter['meta']['records'] == 0) {
             $data = [
@@ -135,6 +136,12 @@ class Formstack extends Controller
 
         dump($matter);
         dump($matters);
+    }
+
+    public function searchContactInMatter ($contact_id) {
+        $matters = $this->getByQuery(['fields' => $this->matters_fields], 'matters');
+        dump($contact_id);
+        dd($matters);
     }
 
 
