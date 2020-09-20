@@ -57,10 +57,24 @@ class Formstack extends Controller
             ];
             $contact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts');
         } else {
+            $data = [
+                'data' =>
+                    [
+                        "first_name" => $input->name->value->first,
+                        "middle_name" => $input->name->value->middle,
+                        "last_name" => $input->name->value->last,
+                        "phone_numbers" => [
+                            [
+                                "name" => "Other",
+                                "number" => $input->phone->value
+                            ]
+                        ],
+                    ]
+            ];
             $contact = $contact['data'][0];
-        }
+            $contact = $this->update($data, $contact['id'], ['fields' => $this->contacts_fields],'contacts');
 
-        //$matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
+        }
 
         $matters = $this->searchMattersWithContact($contact['id']);
         if (count($matters) == 0) {
@@ -98,7 +112,16 @@ class Formstack extends Controller
             ];
             $associatedContact = $this->create($data, ['fields' => $this->contacts_fields], 'contacts');
         } else {
+            $data = [
+                'data' =>
+                    [
+                        "first_name" => $input->associated_name->value->first,
+                        "middle_name" => $input->associated_name->value->middle,
+                        "last_name" => $input->associated_name->value->last,
+                    ]
+            ];
             $associatedContact = $associatedContact['data'][0];
+            $associatedContact = $this->update($data, $associatedContact['id'], ['fields' => $this->contacts_fields],'contacts');
         }
 
         $matter_assoc_contact = false;
