@@ -104,7 +104,7 @@ class Formstack extends Controller
         //dd($relationships);
 
         $matter_assoc_contact = false;
-        if ($matter['relationships']) {
+        if (isset($matter['relationships'])) {
             foreach ($matter['relationships'] as $relationship) {
                 if ($relationship['contact']['id'] == $associatedContact['id']) {
                     $matter_assoc_contact = true;
