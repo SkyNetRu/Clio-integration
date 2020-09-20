@@ -12,7 +12,8 @@ class Formstack extends Controller
     public $url_contact = '';
     public $url_matters = '';
     public $contacts_fields = 'id,etag,phone_numbers,email_addresses,addresses,name,first_name,middle_name,last_name';
-    public $matters_fields = 'id,etag,relationships';
+    public $matters_fields = 'id,etag,relationships,client_id';
+    public $relationships_fields = 'id,etag,description,matter,contact';
 
     public function __construct()
     {
@@ -59,7 +60,7 @@ class Formstack extends Controller
             $contact = $contact['data'][0];
         }
 
-        $this->searchContactInMatter($contact['id']);
+        //$this->searchContactInMatter($contact['id']);
         $matter = $this->getByQuery(['client_id' => $contact['id'], 'fields' => $this->matters_fields], 'matters');
         if ($matter['meta']['records'] == 0) {
             $data = [
@@ -99,7 +100,9 @@ class Formstack extends Controller
             $associatedContact = $associatedContact['data'][0];
         }
 
-        dd($matter);
+        $relationships = $this->getByQuery(['contact_id' => $associatedContact['id'], 'fields' => $this->relationships_fields], 'relationships');
+        //dd($relationships);
+//        dd($matter);
         $matter_assoc_contact = false;
         foreach ($matter['relationships'] as $relationship) {
             if ($relationship['contact']['id'] == $associatedContact['id']) {
@@ -139,7 +142,10 @@ class Formstack extends Controller
     }
 
     public function searchContactInMatter ($contact_id) {
-        $matters = $this->getByQuery(['fields' => $this->matters_fields], 'matters');
+        $matters = $this->getByQuery(['fields' => $this->matters_fields], 'matters')['data'];
+        if ($matters) {
+
+        }
         dump($contact_id);
         dd($matters);
     }
